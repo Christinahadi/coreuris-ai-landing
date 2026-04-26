@@ -1536,7 +1536,7 @@
           └─────────────────────────────────────────────────────┘
         -->
         <div class="label" style="margin-bottom:20px;">Send a Message</div>
-        <div class="contact-form" id="contactForm">
+        <form class="contact-form" id="contactForm" action="https://formspree.io/f/xbdqbnwg" method="POST">
 
           <div class="form-row">
             <div class="form-field">
@@ -1581,7 +1581,7 @@
           <input type="hidden" name="_subject" value="New inquiry — Core URIS AI" />
           <input type="text" name="_gotcha" style="display:none" />
 
-          <button type="button" class="form-submit" id="submitBtn" onclick="submitForm()">
+          <button type="submit" class="form-submit" id="submitBtn">
             Send Message →
           </button>
 
@@ -1591,7 +1591,7 @@
           <div class="form-notice" id="formError">
             Something went wrong. Please email christina@coreuris.ai directly.
           </div>
-        </div>
+        </form>
       </div>
 
     </div>
@@ -1668,10 +1668,12 @@
     document.getElementById('inquiry').value = button.dataset.value;
   }
 
-  async function submitForm() {
-    // ─── REPLACE THIS WITH YOUR FORMSPREE ENDPOINT ───────────
-    const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
-    // ─────────────────────────────────────────────────────────
+  const contactForm = document.getElementById('contactForm');
+
+  contactForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const FORMSPREE_URL = 'https://formspree.io/f/xbdqbnwg';
 
     const btn     = document.getElementById('submitBtn');
     const success = document.getElementById('formSuccess');
@@ -1683,7 +1685,7 @@
     const message = document.getElementById('message').value.trim();
 
     if (!name || !email || !inquiry || !message) {
-      error.textContent = '⚠ Please fill in all fields before sending.';
+      error.textContent = 'Please fill in all fields before sending.';
       error.className = 'form-notice error';
       return;
     }
@@ -1694,30 +1696,53 @@
     error.className   = 'form-notice';
 
     try {
-      const res = await fetch(FORMSPREE_URL, {
+      const formData = new FormData(contactForm);
+
+      const response = await fetch(FORMSPREE_URL, {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, inquiry, message })
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
       });
 
-      if (res.ok) {
+      if (response.ok) {
+        success.textContent = 'Message received. Christina will be in touch shortly.';
         success.className = 'form-notice success';
-        ['name','email','message','inquiry'].forEach(id => document.getElementById(id).value = '');
+
+        contactForm.reset();
         document.querySelectorAll('.inquiry-option').forEach(option => {
           option.classList.remove('active');
           option.setAttribute('aria-checked', 'false');
         });
+
         btn.textContent = 'Message Sent ✓';
-      } else {
-        throw new Error('Formspree returned an error.');
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = 'Send Message →';
+        }, 2500);
+        return;
       }
-    } catch (e) {
-      error.textContent = 'Something went wrong. Please email christina@coreuris.ai directly.';
+
+      let errorMessage = 'Something went wrong. Please email christina@coreuris.ai directly.';
+
+      try {
+        const data = await response.json();
+        if (data && data.errors && data.errors.length) {
+          errorMessage = data.errors.map(item => item.message).join(' ');
+        } else if (data && data.error) {
+          errorMessage = data.error;
+        }
+      } catch (_) {}
+
+      throw new Error(errorMessage);
+    } catch (submissionError) {
+      error.textContent = submissionError.message || 'Something went wrong. Please email christina@coreuris.ai directly.';
       error.className = 'form-notice error';
       btn.disabled = false;
       btn.textContent = 'Send Message →';
     }
-  }
+  });
 </script>
 
 </body>
