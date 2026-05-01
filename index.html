@@ -615,13 +615,33 @@
       color: var(--text);
       font-weight: 500;
     }
-    .founder-role {
+    .founder-role,
+    .founder-company {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.1em;
-      color: var(--amber);
       text-transform: uppercase;
       line-height: 1.6;
+    }
+    .founder-role {
+      color: var(--amber);
+    }
+    .founder-company {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.72em;
+      margin-top: 2px;
+      color: #b8b4ac;
+      opacity: 0.92;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+    }
+    .founder-company .uris {
+      color: var(--amber);
+    }
+    .founder-company .word {
+      display: inline-block;
     }
     .founder-info { }
     .founder-info-label { margin-bottom: 20px; }
@@ -1427,18 +1447,19 @@
           </blockquote>
           <div class="founder-attribution">
             <span class="founder-name">Christina Hadi</span>
-            <span class="founder-role">Founder, CEO &amp; Chief Architect — Core URIS AI LLC</span>
+            <span class="founder-role">Founder &amp; Chief Architect</span>
+            <span class="founder-company"><span class="word">CORE</span><span class="word uris">URIS</span><span class="word">AI</span><span class="word">LLC</span></span>
           </div>
         </div>
       </div>
 
       <div class="founder-info reveal reveal-delay-2">
         <div class="label founder-info-label">About the Founder</div>
-        <h3 class="founder-info-heading display">Founder-led.<br>Systems-built.<br>Operator-grounded.</h3>
+        <h3 class="founder-info-heading display">Applied AI systems architect.<br>Full-stack systems builder.<br>Operational intelligence engineer.</h3>
         <p class="founder-info-desc">
-          Christina Hadi is the founder, architect, and lead engineer behind Core URIS AI.
-          She builds applied intelligence systems across AI infrastructure, civic technology,
-          operational workflows, and domain-specific SaaS products — combining hands-on engineering execution with real operator experience.
+          Christina Hadi is the founder and chief architect behind Core URIS AI, building
+          applied intelligence systems across AI infrastructure, civic technology,
+          operational workflows, and domain-specific SaaS products.
         </p>
         <p class="founder-info-desc">
           Core URIS AI reflects a practical, execution-first philosophy: design for real operating
@@ -1448,7 +1469,7 @@
         <div class="founder-pillars">
           <div class="founder-pillar">
             <span class="founder-pillar-icon">◈</span>
-            Full-stack product development — from architecture to deployment
+            End-to-end product delivery — from architecture to deployment
           </div>
           <div class="founder-pillar">
             <span class="founder-pillar-icon">◈</span>
